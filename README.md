@@ -67,7 +67,7 @@ n_gpu | fp32(batch 4) | fp16(batch 8)
 4                |          112      |             185.6
 
 * Compared to [results of BERT by NVIDIA's DeepLearningExamples](https://github.com/NVIDIA/DeepLearningExamples/tree/master/TensorFlow/LanguageModeling/BERT), 
-my results shows better results(NVIDIA reported 35, 110 examples/sec). 
+my results show better results(NVIDIA reported 35, 110 examples/sec). 
 I think it was due to the batch size. 
 Their batch size is 2, 4 for fp32, fp16 respectively.
 And I didn't face memory issue. 
