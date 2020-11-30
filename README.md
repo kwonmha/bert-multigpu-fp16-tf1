@@ -1,6 +1,6 @@
 # Measuring Pre Training Speed of BERT with Multi Gpus and Mixed Precision 
 
-#### Cloned from google-research's bert repository.
+#### Cloned from [google-research's bert repository](https://github.com/google-research/bert).
 
 ## Modifications :
 
