@@ -2,7 +2,7 @@
 
 #### Cloned from google-research's bert repository.
 
-### Modifications :
+## Modifications :
 
 1. run_pretraining.py : 
     1. Added `strategy` for using multi gpus. It seems that `MultiWorkerMirroredStrategy`(`CollectiveAllReduceStrategy`) 
@@ -17,18 +17,18 @@
     2. For other modifications, referenced [guotong1988's BERT-GPU repository](https://github.com/guotong1988/BERT-GPU/).
 3. site-packages/tensorflow/python/training/experimental/loss_scale.py line 311 :
 
-    * I had to change dtype of `self._num_good_steps` into `dtypes.int32` from `dtypes.int64`
+    * I had to change dtype of `self._num_good_steps` into **`dtypes.int32`** from `dtypes.int64`
     as an error occurs while converting tensors for mixed precision training.
       
     * `self._num_good_steps = self._add_weight(
         name='good_steps', dtype=dtypes.int32, initial_value=0)`
 
-### Requirements :
+## Requirements :
 python 3.6
 
 tensorflow-gpu == 1.14.0
 
-### Usage :
+## Usage :
 
 ```
 python run_pretraining.py \ 
@@ -39,16 +39,16 @@ python run_pretraining.py \
 --use_fp16
 ```
 
-### Experimental settings
+## Experimental settings
 bert-model : bert-base
 
 max_sequence_length : 512
 
 Used `MultiWorkerMirroredStrategy`.
 
-### Results :
+## Results :
 
-#### RTX 2080 Ti
+### RTX 2080 Ti
 
 n_gpu | fp32(batch 4) | fp16(batch 6)
 -----------------|---------------------|-------------------------
@@ -56,7 +56,7 @@ n_gpu | fp32(batch 4) | fp16(batch 6)
 2                |          41.2       |             55.6
 4                |          57.6       |             76.8
 
-#### V100(16G)
+### V100(16G)
 
 Didn't tested with 1, 2 GPUs.
 
@@ -70,7 +70,7 @@ n_gpu | fp32(batch 4) | fp16(batch 8)
 my results shows better results(NVIDIA reported 35, 110 examples/sec). 
 I think it was due to the batch size. 
 Their batch size is 2, 4 for fp32, fp16 respectively.
-And I didn't faced memory issue. 
+And I didn't face memory issue. 
 
-
-#### I didn't fully trained BERT from scratch. Just measured training speed for about 2k steps. 
+#### Disclaimer
+I didn't fully trained BERT from scratch. Just measured training speed for about 2k steps. 
