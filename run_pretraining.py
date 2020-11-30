@@ -180,7 +180,7 @@ def model_fn_builder(bert_config, init_checkpoint, learning_rate,
     if mode == tf.estimator.ModeKeys.TRAIN:
       train_op = optimization.create_optimizer(
           total_loss, learning_rate, num_train_steps, num_warmup_steps, use_tpu,
-          use_fp16, multi_gpu)
+          use_fp16)
 
       if multi_gpu:
         output_spec = tf.estimator.EstimatorSpec(
