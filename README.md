@@ -44,17 +44,17 @@ bert-model : bert-base
 
 max_sequence_length : 512
 
-Used `MultiWorkerMirroredStrategy`.
+Used `MultiWorkerMirroredStrategy` in default.
 
 ## Results :
 
 ### RTX 2080 Ti
 
 n_gpu | fp32(batch 4) | fp16(batch 6)
------------------|---------------------|-------------------------
-1                |          29         |             34
-2                |          41.2       |             55.6
-4                |          57.6       |             76.8
+---------|---------------|------------
+1        |       29      |       34
+2        |       41.2    |       55.6
+4        |       57.6    |       76.8
 
 ### V100(16G)
 
@@ -62,15 +62,35 @@ Didn't tested with 1, 2 GPUs.
 
 Training with batch size 8 enables V100 to use tensor cores.
 
-n_gpu | fp32(batch 4) | fp16(batch 8)
------------------|---------------------|-------------------------
-4                |          112      |             185.6
+#### `MultiWorkerMirroredStrategy`
+n_gpu | fp32(batch 4) | fp16(batch 8) | fp16(batch 7) | fp16(batch 4)
+-----------|----------|---------------|---------------|--------------|
+4          |     112  |     185.6     | 176           | 134
+
+#### `MirroredStrategy`
+n_gpu | fp32(batch 4) | fp16(batch 8) | fp16(batch 7) | fp16(batch 4)
+-----------|----------|---------------|---------------|--------------|
+4          |     95   |     160       | 146           | 110
+
+#### horovod(same as NVIDIA's DeepLearningExamples)
+n_gpu | fp32(batch 4) | fp16(batch 8) | fp16(batch 4)
+-----------|----------|---------------|---------------|
+1          | NAN loss |     44        | 33
+4          | NAN loss |     160       | 110
 
 * Compared to [results of BERT by NVIDIA's DeepLearningExamples](https://github.com/NVIDIA/DeepLearningExamples/tree/master/TensorFlow/LanguageModeling/BERT), 
-my results show better results(NVIDIA reported 35, 110 examples/sec). 
-I think it was due to the batch size. 
+my results using `MultiWorkerMirroredStrategy` show better results.
+(But it seems to consume little more memory.)
+NVIDIA reported 35, 110 examples/sec on 1, 4 GPUs with batch size 4.
+Test with `MirroredStrategy`, horovod resulted same speed as NVIDIA's results. 
+I think it is due to the batch size. 
 Their batch size is 2, 4 for fp32, fp16 respectively.
-And I didn't face memory issue. 
+
+* And batch size of multiple of 8 doesn't seem to dramatically increase
+training speed even though I checked TensorCore was enabled.
+It might be due to my vocab size which is not multiple of 8 but I'm not sure.
+
+* **You might face OOM error during training with batch size 8.** 
 
 #### Disclaimer
-I didn't fully trained BERT from scratch. Just measured training speed for about 2k steps. 
+I didn't fully train BERT from scratch. Just measured training speed for about 2k steps. 
