@@ -94,7 +94,7 @@ Maybe horovod is efficient in memory.
 training speed even though I checked TensorCore was enabled.
 It might be due to my vocab size which is not multiple of 8 but I'm not sure.
 
-* **You might face OOM error during training with batch size 8.** 
+* **You might face OOM error during training with batch size 8 with Tensorflow `Strategy`s.** 
 
 #### Disclaimer
 I didn't fully train BERT from scratch. Just measured training speed for about 2k steps. 
