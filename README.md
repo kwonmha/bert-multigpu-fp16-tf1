@@ -73,10 +73,10 @@ n_gpu | fp32(batch 4) | fp16(batch 8) | fp16(batch 7) | fp16(batch 4)
 4          |     95   |     160       | 146           | 110
 
 #### horovod(same as NVIDIA's DeepLearningExamples)
-n_gpu | fp32(batch 4) | fp16(batch 8) | fp16(batch 4)
------------|----------|---------------|---------------|
-1          | NAN loss |     44        | 33
-4          | NAN loss |     160       | 110
+n_gpu | fp32(batch 4) | fp16(batch 4) | fp16(batch 8) | fp16(batch 14) |
+-----------|----------|---------------|---------------|---------------|
+1          | NAN loss | 33            |     44        |               |
+4          | NAN loss | 110           |     160       |     196       |
 
 * Compared to [results of BERT by NVIDIA's DeepLearningExamples](https://github.com/NVIDIA/DeepLearningExamples/tree/master/TensorFlow/LanguageModeling/BERT), 
 my results using `MultiWorkerMirroredStrategy` show better results.
@@ -85,6 +85,10 @@ NVIDIA reported 35, 110 examples/sec on 1, 4 GPUs with batch size 4.
 Test with `MirroredStrategy`, horovod resulted same speed as NVIDIA's results. 
 I think it is due to the batch size. 
 Their batch size is 2, 4 for fp32, fp16 respectively.
+
+* With horovod, I could increase batch size up to 14, resulted 196 samples per seconds.
+Increasing batch size over 8 failed with both Tensorflow `Strategy`s.
+Maybe horovod is efficient in memory.
 
 * And batch size of multiple of 8 doesn't seem to dramatically increase
 training speed even though I checked TensorCore was enabled.
